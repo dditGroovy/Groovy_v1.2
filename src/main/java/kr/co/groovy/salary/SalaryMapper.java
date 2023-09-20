@@ -25,6 +25,7 @@ public interface SalaryMapper {
 
     List<PaystubVO> loadPaystubList(@Param("emplId") String emplId, @Param("year") String year);
 
-
     void modifyIncmtax(@Param("code")String code, @Param("value")double value);
+
+    PaystubVO loadPaystubDetail(@Param("emplId") String emplId, @Param("paymentDate") String paymentDate);
 }

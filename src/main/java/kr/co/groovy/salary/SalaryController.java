@@ -1,11 +1,8 @@
 package kr.co.groovy.salary;
 
 import kr.co.groovy.security.CustomUser;
-import kr.co.groovy.utils.ParamMap;
 import kr.co.groovy.vo.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -81,10 +78,8 @@ public class SalaryController {
         String emplId = principal.getName();
         PaystubVO recentPaystub = service.loadRecentPaystub(emplId);
         List<Integer> years = service.loadYearsForSortPaystub(emplId);
-        model.addAttribute("recentPaystub", recentPaystub);
+        model.addAttribute("paystub", recentPaystub);
         model.addAttribute("years", years);
-        log.info("recentPaystub:{}",recentPaystub);
-        log.info("years:{}",years);
         return "employee/mySalary";
     }
 
@@ -108,8 +103,25 @@ public class SalaryController {
     @GetMapping("/paystub/{year}")
     @ResponseBody
     public List<PaystubVO> loadPaystubList(Principal principal, @PathVariable String year) {
-        log.info("year : {}", year);
         String emplId = principal.getName();
         return service.loadPaystubList(emplId, year);
     }
+
+    @GetMapping("/paystub/detail/{paymentDate}")
+    public String paystubDetail(Principal principal, @PathVariable String paymentDate, Model model) {
+        String emplId = principal.getName();
+        PaystubVO paystubDetail = service.loadPaystubDetail(emplId, paymentDate);
+        List<Integer> years = service.loadYearsForSortPaystub(emplId);
+        model.addAttribute("paystub", paystubDetail);
+        model.addAttribute("years", years);
+        return "employee/mySalary";
+    }
+
+    @PostMapping("/paystub/saveCheckboxState")
+    @ResponseBody
+    public void saveCheckboxState(@RequestParam("isChecked") boolean isChecked) {
+        log.info("isChecked : {}", isChecked);
+        service.saveCheckboxState(isChecked);
+    }
+
 }
