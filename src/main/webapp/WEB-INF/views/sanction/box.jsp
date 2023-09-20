@@ -2,36 +2,84 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec"
            uri="http://www.springframework.org/security/tags" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/sanction/sanction.css">
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="CustomUser"/>
-    <div class="content-container">
-        <h2>
-            <a href="${pageContext.request.contextPath}/sanction/box">결재 요청</a>
-            <a href="${pageContext.request.contextPath}/sanction/document">결재 문서</a>
-        </h2> <br/><br/>
+    <div class="content-container sanction-container">
+        <header id="tab-header">
+            <h1><a href="${pageContext.request.contextPath}/sanction/box" class="on">결재 요청</a></h1>
+            <h1><a href="${pageContext.request.contextPath}/sanction/document">결재 문서</a></h1>
+        </header>
 
-        <ul id="sanctionStatus">
-            <li><span>기안한 결재</span> <a href="#"></a>건</li>
-            <li><span>완료된 결재</span> <a href="#"></a>건</li>
-            <li><span>반려된 결재</span> <a href="#"></a>건</li>
-        </ul>
-        <hr/>
-        <br/>
-        <h3>결재 목록</h3>
-        <ul>
-            <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT011">연차</a></li>
+        <main>
+            <div class="main-inner sanction-inner">
+                <div class="status-wrap">
+                    <ul id="sanctionStatus">
+                        <li class="status-item">
+                            <p class="status-item-title">기안한 결재</p>
+                            <p class="status-item-content"><a href="#" class="strong font-b font-32"></a>건</p>
+                        </li>
+                        <li class="status-item">
+                            <p class="status-item-title">완료된 결재</p>
+                            <p class="status-item-content"><a href="#"  class="strong font-b font-32"></a>건</p>
+                        </li>
+                        <li class="status-item">
+                            <p class="status-item-title">반려된 결재</p>
+                            <p class="status-item-content"><a href="#"  class="strong font-b font-32"></a>건</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sanction-wrap">
+                    <h3 class="main-title">결재 목록</h3>
+                    <div class="main-content">
+                        <ul class="sanction-list">
+                            <li class="sanction-list-item">
+                                <a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT011"
+                                   class="btn-3d icon-area" id="refresh">
+                                    <h4 class="main-title">연차</h4>
+                                    <p class="main-desc">눈치 보지 말고 🙌</p>
+                                </a>
+                            </li>
 
-            <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">여름 휴가</a>
-            </li>
-            <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">생일</a></li>
-            <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">결혼 -
-                신혼여행</a>
-            </li>
-            <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">경조사</a></li>
-            <li><a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013">병가</a></li>
-
-            <li><a href="${pageContext.request.contextPath}/card/request">법인카드 신청</a></li>
-        </ul>
+                            <li class="sanction-list-item">
+                                <a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013"
+                                   class="btn-3d icon-area" id="vacation">
+                                    <h4 class="main-title">여름 휴가</h4>
+                                    <p class="main-desc">으른이들의 방학 ✈</p>
+                                </a>
+                            </li>
+                            <li class="sanction-list-item">
+                                <a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013"
+                                   class="btn-3d icon-area" id="birthday">
+                                    <h4 class="main-title">생일</h4>
+                                    <p class="main-desc">주인공은 점심에 퇴근해 🎈</p>
+                                </a>
+                            </li>
+                            <li class="sanction-list-item">
+                                <a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013"
+                                   class="btn-3d icon-area" id="event">
+                                    <h4 class="main-title">경조사</h4>
+                                    <p class="main-desc">기쁠 때나 슬플 때나 <br /> 그루비가 함께합니다 🙆‍♀️</p>
+                                </a>
+                            </li>
+                            <li class="sanction-list-item">
+                                <a href="${pageContext.request.contextPath}/sanction/write/DEPT010?format=SANCTN_FORMAT013"
+                                   class="btn-3d icon-area" id="sick">
+                                    <h4 class="main-title">병가</h4>
+                                    <p class="main-desc">아픈 것도 서러운데 퇴근 🏃‍♂️🏃‍♀️</p>
+                                </a>
+                            </li>
+                            <li class="sanction-list-item">
+                                <a href="${pageContext.request.contextPath}/card/request" class="btn-3d icon-area" id="card">
+                                    <h4 class="main-title">법인카드 신청</h4>
+                                    <p class="main-desc">회사 법인 카드 신청💳️</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
     <script>
         $(document).ready(function () {

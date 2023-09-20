@@ -5,6 +5,7 @@ body {
     font-family: var(--font-reg);
 }
 * {
+    color: var(--color-font-high);
     transition: 0.35s;
 }
 .wrapper {
@@ -12,11 +13,17 @@ body {
 }
 .container {
     width: 100%;
+    min-height: 100vh;
     padding: calc((93/var(--vh)*100vh)) calc((50/var(--vw)*100vw)) 0 calc((50/var(--vw)*100vw));
     background-color: var(--color-bg-grey);
 }
 .content-container {
     margin-left: calc((344 / var(--vw)) * 100vw);
+}
+.main-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vh-64);
 }
 /* aside */
 #sideBar{
@@ -272,7 +279,7 @@ i.icon {
     font-size: var(--font-size-11);
 
 }
-    /*  더보기 */
+/*  더보기 */
 .more {
     font-size: var(--font-size-14);
     color: var(--color-font-md);

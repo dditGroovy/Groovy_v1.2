@@ -31,13 +31,13 @@
                         <div class="section-inner flex-inner">
                             <div class="commute">
                                 <div class="commute-area commute-work card-df card">
-                                    <button type="button" id="work" data-io="0" class="btn-commute icon-area pd-32">
+                                    <button type="button" id="work" data-io="0" class="btn-commute btn-3d icon-area pd-32">
                                         <h3 class="content-title font-b">출근</h3>
                                         <p id="workTime">00:00</p>
                                     </button>
                                 </div>
                                 <div class="commute-area commute-leave card-df card">
-                                    <button type="button" id="leave" data-io="1" class="btn-commute icon-area pd-32">
+                                    <button type="button" id="leave" data-io="1" class="btn-commute btn-3d icon-area pd-32">
                                         <h3 class="content-title font-b">퇴근</h3>
                                         <p id="leaveTime">00:00</p>
                                     </button>

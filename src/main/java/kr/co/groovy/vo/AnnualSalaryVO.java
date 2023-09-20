@@ -10,10 +10,7 @@ import lombok.ToString;
 public class AnnualSalaryVO {
     private String anslryStdrYear;
     private String commonCodeDeptCrsf;
+    private String originalCode;
     private int anslryAllwnc;
-    private int bonus;
 
-    public int getTotalSalary() {
-        return anslryAllwnc + bonus;
-    }
 }

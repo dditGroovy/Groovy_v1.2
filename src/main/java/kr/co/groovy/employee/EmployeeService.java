@@ -7,18 +7,23 @@ import kr.co.groovy.vo.ConnectionLogVO;
 import kr.co.groovy.vo.EmployeeVO;
 import kr.co.groovy.vo.NotificationVO;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -221,7 +226,108 @@ public class EmployeeService {
     }
 
     String findTelNoByEmplId(String emplId) {
-        return mapper.findTelNoByEmplId(emplId);
+        String telNo = mapper.findTelNoByEmplId(emplId);
+        if (telNo != null) {
+            return "exists";
+        } else {
+            return "null";
+        }
+    }
+
+    public void sendMessage(String emplTelno, String password) {
+        String hostNameUrl = "https://sens.apigw.ntruss.com";
+        String requestUrl= "/sms/v2/services/";
+        String requestUrlType = "/messages";
+        String accessKey = "fcSixF8BWBoQBG4CFu2e";
+        String secretKey = "A130dEIHZXHnlS0xGZrdhyX9ZGxmy17gAfpzvnM4";
+        String serviceId = "ncp:sms:kr:276170051339:groovy";
+        String method = "POST";
+        String timestamp = Long.toString(System.currentTimeMillis());
+        requestUrl += serviceId + requestUrlType;
+        String apiUrl = hostNameUrl + requestUrl;
+
+        JSONObject bodyJson = new JSONObject();
+        JSONObject toJson = new JSONObject();
+        JSONArray toArr = new JSONArray();
+
+        toJson.put("to", emplTelno);
+        toArr.add(toJson);
+
+        bodyJson.put("type", "SMS");
+        bodyJson.put("contentType", "COMM");
+        bodyJson.put("from", "01039202239");
+        bodyJson.put("content", "[Groovy] 임시 비밀번호는 " + password + "입니다.");
+        bodyJson.put("messages", toArr);
+        String body = bodyJson.toJSONString();
+        log.info(body);
+
+        try {
+            URL url = new URL(apiUrl);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestProperty("content-type", "application/json");
+            connection.setRequestProperty("x-ncp-apigw-timestamp", timestamp);
+            connection.setRequestProperty("x-ncp-iam-access-key", accessKey);
+            connection.setRequestProperty("x-ncp-apigw-signature-v2", makeSignature(requestUrl, timestamp, method, accessKey, secretKey));
+            connection.setRequestMethod(method);
+            connection.setDoOutput(true);
+
+            DataOutputStream dout = new DataOutputStream(connection.getOutputStream());
+            dout.write(body.getBytes());
+            dout.flush();
+            dout.close();
+
+            int responseCode = connection.getResponseCode();
+            BufferedReader br = null;
+            log.info("responseCode: " + responseCode);
+            if (responseCode == 202) {
+                br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            }
+
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = br.readLine()) != null) {
+                response.append(inputLine);
+            }
+            br.close();
+
+            log.info(response.toString());
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    private String makeSignature(String url, String timestamp, String method, String accessKey, String secretKey) throws InvalidKeyException, NoSuchAlgorithmException {
+        String space = " ";
+        String newLine = "\n";
+
+        String message = new StringBuilder()
+                .append(method)
+                .append(space)
+                .append(url)
+                .append(newLine)
+                .append(timestamp)
+                .append(newLine)
+                .append(accessKey)
+                .toString();
+
+        SecretKeySpec signingKey = null;
+        String encodeBase64String = null;
+        try {
+            signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(signingKey);
+            byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
+            encodeBase64String = Base64.getEncoder().encodeToString(rawHmac);
+        } catch (UnsupportedEncodingException e) {
+            encodeBase64String = e.toString();
+        }
+        return encodeBase64String;
     }
 }
 

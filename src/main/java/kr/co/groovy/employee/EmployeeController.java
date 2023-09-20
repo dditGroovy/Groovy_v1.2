@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/employee")
 @Controller
@@ -38,21 +39,32 @@ public class EmployeeController {
     }
 
     @GetMapping("/findPassword")
-    public String goFindPassword() {
+    public String findPasswordForm() {
         return "findPassword";
+    }
+
+    @PostMapping("/findTelNo")
+    @ResponseBody
+    public String findTelNoByEmplId(@RequestBody String emplId) {
+        return service.findTelNoByEmplId(emplId.substring(emplId.indexOf('=') + 1));
     }
 
     @PostMapping("/findPassword")
     @ResponseBody
-    public String findTelNoByEmplId(String emplId) {
-        String telNo = service.findTelNoByEmplId(emplId);
-        if (telNo == null) {
-            return "존재하는 사번이 없습니다.";
+    public String findPassword(@RequestBody String emplId) {
+        emplId = emplId.substring(emplId.indexOf('=') + 1);
+        String findTelNoResponse = service.findTelNoByEmplId(emplId);
+        if (findTelNoResponse.equals("exists")) {
+            // 문자보내기
+            EmployeeVO employeeVO = service.loadEmp(emplId);
+            String password = UUID.randomUUID().toString().substring(0, 8);
+            String[] splitTelNo = employeeVO.getEmplTelno().split("-");
+            String emplTelno = splitTelNo[0] + splitTelNo[1] + splitTelNo[2];
+            service.sendMessage(emplTelno, password);
+            service.modifyPassword(emplId, password);
+            return "success";
         }
-
-        // 문자보내기
-        service.modifyPassword(emplId, "welcomegroovy");
-        return "findPassword";
+        return "fail";
     }
 
     /* 사원 - 비밀번호 수정*/

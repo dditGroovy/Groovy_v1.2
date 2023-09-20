@@ -9,7 +9,7 @@
         <div class="content-line orgChart card-df border-radius-32">
             <div id="search" class="search input-free-white">
                 <input type="text" id="searchLine" class=""/>
-                <button type="button" class="btn-search btn-flat btn">검색</button>
+                <button type="button" class="btn-search btn-flat btn" id="searchLineBtn">검색</button>
             </div>
             <div id="line">
                 <div class="inner">
@@ -74,7 +74,9 @@
                         </div>
                     </div>
                 </div>
+                <div id="searchResult"></div>
             </div>
+
         </div>
         <div class="approvalLine card-df border-radius-32">
             <div id="approval">
@@ -104,7 +106,9 @@
             <div class="line-service">
                 <div class="line-btn-wrapper">
                     <button type="button" class="btn btn-out-sm btn-modal" data-name="bookmarkName">개인 결재선으로 저장</button>
-                    <button type="button" class="btn btn-out-sm btn-modal" data-name="loadLine" onclick="loadLine()">결재선 불러오기</button>
+                    <button type="button" class="btn btn-out-sm btn-modal" data-name="loadLine" onclick="loadLine()">결재선
+                        불러오기
+                    </button>
                 </div>
             </div>
             <div class="modal-footer btn-wrapper">
@@ -113,7 +117,7 @@
             </div>
         </div>
     </div>
-    <!--  모달창 -->
+    <!-- 모달창 -->
     <div id="modal" class="modal-dim">
         <div class="dim-bg"></div>
         <div class="modal-layer card-df sm bookmarkName">
@@ -164,13 +168,17 @@
         let bookmarkName;
         let bookmarkLine = {};
         const accordians = document.querySelectorAll(".dept");
+        const windowCloseBtn = document.querySelector(".close");
+        let keyword;
 
-        document.addEventListener("DOMContentLoaded",()=>{
-            accordians.forEach(item=> {
+        loadOrgLine() // 로드 시 결재선 불러오기
+
+        document.addEventListener("DOMContentLoaded", () => {
+            accordians.forEach(item => {
                 const depth = item.querySelector(".depth");
                 const header = item.querySelector(".department");
 
-                header.addEventListener("click", e=> {
+                header.addEventListener("click", e => {
                     e.preventDefault();
                     if (item.classList.contains("active")) {
                         item.classList.remove("active");
@@ -181,7 +189,78 @@
                     }
                 });
             });
+            windowCloseBtn.addEventListener("click", () => {
+                window.close();
+            })
         })
+
+        // 결재선 검색
+        $("#searchLineBtn").on("click", function () {
+            $('#searchResult').html("");
+            loadOrgLine()
+        })
+
+        // 조직도 결재선 불러오기
+        function loadOrgLine() {
+            keyword = document.querySelector("#searchLine").value;
+            console.log(keyword);
+            $.ajax({
+                url: `/sanction/api/line/\${emplId}?keyword=\${keyword}`,
+                method: 'GET',
+                contentType: "application/json;charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    if (keyword == null || keyword === "") {
+                        data.forEach(function (employee) {
+                            let employeeLi = $('<li class=emplList>');
+                            employeeLi.html(
+                                `<label style="display: flex">
+                            <input type="checkbox" class="lineChk">
+                            <input type="hidden" value= "\${employee.emplId}"/>
+                            <div class="line-block">
+                             <span class="name">\${employee.emplNm}</span>
+                             <span class="dept">\${employee.commonCodeDept}</span>
+                             <span class="clsf">\${employee.commonCodeClsf}</span>
+                       </div></label>`);
+                            if (employee.commonCodeDept === '대표') {
+                                $('#ceo .ceo > .depth').append(employeeLi);
+                            } else if (employee.commonCodeDept === '영업') {
+                                $('#st .dept3 > .depth').append(employeeLi);
+                            } else if (employee.commonCodeDept === '홍보') {
+                                $('#prt .dept4 > .depth').append(employeeLi);
+                            } else if (employee.commonCodeDept === '총무') {
+                                $('#gat .dept5 > .depth').append(employeeLi);
+                            } else if (employee.commonCodeDept === '인사') {
+                                $('#hrt .dept1 > .depth').append(employeeLi);
+                            } else if (employee.commonCodeDept === '회계') {
+                                $('#at .dept2 > .depth').append(employeeLi);
+                            }
+                        });
+                    } else {
+                        $(".inner").prop("hidden", true);
+                        data.forEach(function (employee) {
+                            let employeeLi = $('<li class=emplList>');
+                            employeeLi.html(
+                                `<label style="display: flex">
+                            <input type="checkbox" class="lineChk">
+                            <input type="hidden" value= "\${employee.emplId}"/>
+                            <div class="line-block">
+                             <span class="name">\${employee.emplNm}</span>
+                             <span class="dept">\${employee.commonCodeDept}</span>
+                             <span class="clsf">\${employee.commonCodeClsf}</span>
+                       </div></label>`);
+                            $('#searchResult').append(employeeLi);
+                        });
+                    }
+
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log("AJAX 오류:", error);
+                }
+            });
+        }
+
+        // 저장된 결재선 불러오기
         function loadLine() {
             $.ajax({
                 url: `/sanction/api/bookmark/\${emplId}`,
@@ -214,6 +293,24 @@
             });
         }
 
+        // 결제선 삭제
+        $("#bookmarkLine").on("click", ".removeBtn", function () {
+            let pLabel = $(this).closest("label");
+            let sn = pLabel.find("input[type='hidden']").val();
+            console.log(sn)
+
+            $.ajax({
+                url: `/sanction/api/bookmark/\${sn}`,
+                type: "DELETE",
+                success: function (res) {
+                    pLabel.remove();
+                },
+                error: function (xhr) {
+                }
+            });
+        });
+
+        // 결재선 저장
         function saveLine() {
             bookmarkName = $("#bookmarkName").val()
             $("#sanctionLine .lineList li label").each(function () {
@@ -242,44 +339,6 @@
             });
         }
 
-
-        $.ajax({
-            url: `/sanction/api/line/\${emplId}`,
-            method: 'GET',
-            contentType: "application/json;charset=utf-8",
-            dataType: 'json',
-            success: function (data) {
-                data.forEach(function (employee) {
-                    let employeeLi = $('<li class=emplList>');
-                    employeeLi.html(
-                        `<label style="display: flex">
-                            <input type="checkbox" class="lineChk">
-                            <input type="hidden" value= "\${employee.emplId}"/>
-                            <div class="line-block">
-                             <span class="name">\${employee.emplNm}</span>
-                             <span class="dept">\${employee.commonCodeDept}</span>
-                             <span class="clsf">\${employee.commonCodeClsf}</span>
-                       </div></label>`);
-                    if (employee.commonCodeDept == '대표') {
-                        $('#ceo .ceo > .depth').append(employeeLi);
-                    } else if (employee.commonCodeDept == '영업') {
-                        $('#st .dept3 > .depth').append(employeeLi);
-                    } else if (employee.commonCodeDept == '홍보') {
-                        $('#prt .dept4 > .depth').append(employeeLi);
-                    } else if (employee.commonCodeDept == '총무') {
-                        $('#gat .dept5 > .depth').append(employeeLi);
-                    } else if (employee.commonCodeDept == '인사') {
-                        $('#hrt .dept1 > .depth').append(employeeLi);
-                    } else if (employee.commonCodeDept == '회계') {
-                        $('#at .dept2 > .depth').append(employeeLi);
-                    }
-                });
-
-            },
-            error: function (xhr, textStatus, error) {
-                console.log("AJAX 오류:", error);
-            }
-        });
 
         /* 결재선 추가 */
         lineInner.forEach(item => {
@@ -316,13 +375,13 @@
         })
 
         /*  결재선 값 받아오기  */
-        lineSave.addEventListener("click",()=>{
+        lineSave.addEventListener("click", () => {
             const selected = document.querySelector(".savedlineChk:checked");
             const selectedLabel = selected.closest(".line-label");
             const selectedLine = selectedLabel.querySelector(".line-block");
             const lineItem = selectedLine.querySelectorAll(".line-detail")
 
-            lineInner.forEach(item=>{
+            lineInner.forEach(item => {
                 const lineList = item.querySelector('.lineList');
                 lineList.innerHTML = "";
             })
@@ -342,7 +401,11 @@
                 const newDiv = document.createElement("div");
                 newDiv.classList = "line-block";
 
-                newDiv.append(text);
+                const newText = document.createElement("p")
+                newText.classList = "name";
+                newText.append(text);
+
+                newDiv.append(newText);
 
                 newLabel.append(newInput);
                 newLabel.append(newDiv);
@@ -364,7 +427,7 @@
         })
         /*  데이터 보내기 */
 
-        submitLineBtn.addEventListener("click",e=>{
+        submitLineBtn.addEventListener("click", e => {
             e.preventDefault();
             const sanctionLineItems = document.querySelectorAll('#sanctionLine .lineList label');
             const refrnLineItems = document.querySelectorAll('#refrnLine .lineList label');
@@ -373,17 +436,17 @@
                 refrnLine: {}
             };
 
-            if(sanctionLineItems.length != 0){
-                sanctionLineItems.forEach(item=>{
+            if (sanctionLineItems.length != 0) {
+                sanctionLineItems.forEach(item => {
                     const id = item.querySelector("input").value;
                     const name = item.querySelector(".name").innerText;
                     data.sanctionLine[id] = name;
                 })
-            }else {
+            } else {
                 alert("결재선을 선택해야합니다.");
                 return;
             }
-            refrnLineItems.forEach(item=>{
+            refrnLineItems.forEach(item => {
                 const id = item.querySelector("input").value;
                 const name = item.querySelector(".name").innerText;
                 data.refrnLine[id] = name;
@@ -395,9 +458,7 @@
             window.close();
 
         })
-        document.querySelector("#sideBar").style.display = "none";
+        /*document.querySelector("#sideBar").style.display = "none";*/
 
     </script>
-    </body>
-    </html>
 </sec:authorize>

@@ -67,27 +67,24 @@
 /* ///// font ///// */
 @font-face {
     font-family: 'Pretendard-Regular';
-    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    src: url("../util/PretendardVariable.woff2") format('woff2-variations');
     font-weight: 400;
     font-style: normal;
 }
 @font-face {
     font-family: 'Pretendard-medium';
-    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    src: url("../util/PretendardVariable.woff2") format('woff2-variations');
     font-weight: 500;
-    font-style: normal;
 }
 @font-face {
     font-family: 'Pretendard-semiBold';
-    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    src: url("../util/PretendardVariable.woff2") format('woff2-variations');
     font-weight: 700;
-    font-style: normal;
 }
 @font-face {
     font-family: 'Pretendard-bold';
-    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    src: url("../util/PretendardVariable.woff2") format('woff2-variations');
     font-weight: 800;
-    font-style: normal;
 }
 /* font-size */
 .font-9 {font-size: var(--font-size-9);}
@@ -104,6 +101,17 @@
 .font-sb {font-family: "Pretendard-semiBold";}
 .font-b {font-family: "Pretendard-bold";}
 
+/* text */
+.main-title {
+    font-size: var(--font-size-24);
+    font-family: var(--font-b);
+    color: var(--color-font-high);
+}
+.main-desc {
+    font-size: var(--font-size-18);
+    color: var(--color-font-high);
+    line-height: 1.1;
+}
 
 /* ///// border-radius ///// */
 .border-radius-24 {border-radius: var(--size-24);}
@@ -131,6 +139,50 @@
 .btn-free-blue {background-color:  var(--color-main); border: 1px solid var(--color-stroke); border-radius: var(--size-32); box-shadow: var(--clay-btn); color: white; font-weight: 600;}
 .btn.active {background-color: var(--color-main); box-shadow: var(--clay-btn);}
 .btn-flat {background-color: var(--color-main); border-radius: var(--size-32); display: flex; align-items: center; border: none; color: white; }
+
+.btn-3d {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--vw-12);
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-font-high);
+    font-size: var(--font-size-24);
+    border: none;
+    padding: var(--vw-32);
+}
+.btn-3d:hover {
+    background: var(--color-main);
+    box-shadow: var(--clay-btn);
+}
+.btn-3d:hover > * {
+    color: white;
+}
+.btn-3d:hover.icon-area::after {
+    transform: scale(1.2);
+    right: 2%;
+    bottom: 2%;
+}
+.icon-area {
+    position: relative;
+}
+.icon-area::after {
+    content: '';
+    position: absolute;
+    right: 3%;
+    bottom: 3%;
+    width: calc((80 / 1920) * 100vw);
+    height: calc((80 / 1920) * 100vw);
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    transition: 0.35s;
+}
 /* modal */
 .modal {background-color: var(--color-white); border-radius: var(--size-32); box-shadow: var(--shadow-modal); padding: var(--size-32);}
 
@@ -151,11 +203,21 @@
     background-image: url("../images/icon/check.svg");
 }
 .checkBoxLabel {font-size: var(--font-size-11);}
+
 /* tab */
-.tab {
+#tab-header {
+    display: flex;
+    gap: var(--vw-64);
+    align-items: center;
+    margin-bottom: var(--vh-64);
+}
+#tab-header a {
     font-size: var(--font-size-36);
-    color: var(--color-font-high);
+    color: var(--color-font-row);
     font-weight: 600;
+}
+#tab-header a.on {
+    color: var(--color-font-high);
 }
 
 /* icon */

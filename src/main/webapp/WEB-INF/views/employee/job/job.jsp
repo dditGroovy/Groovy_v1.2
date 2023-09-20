@@ -206,6 +206,7 @@
 
     <div id="requestJobContainer">
         <h1>요청한 업무</h1>
+        <a href="/job/request">더보기</a>
         <c:forEach var="requestJobVO" items="${requestJobList}">
             <button type="button" class="requestJobDetail" data-seq="${requestJobVO.jobNo}">
                     ${requestJobVO.jobSj}

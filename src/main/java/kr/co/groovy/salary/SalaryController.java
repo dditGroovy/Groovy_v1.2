@@ -47,6 +47,12 @@ public class SalaryController {
         service.modifyIncmtax(code, value);
     }
 
+    @PostMapping("/modify/salary")
+    @ResponseBody
+    public void modifySalary( String code,  int value){
+        service.modifySalary(code, value);
+    }
+
 
     // 회계팀의 급여 상세
     @GetMapping("/list")

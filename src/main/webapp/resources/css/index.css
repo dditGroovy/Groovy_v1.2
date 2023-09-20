@@ -95,7 +95,7 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     color: var(--color-font-row);
     font-size: var(--font-size-11);
 }
-.icon-area {
+/*.icon-area {
     position: relative;
 }
 .icon-area::after {
@@ -109,7 +109,7 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     background-size: 100%;
     background-repeat: no-repeat;
     transition: 0.35s .3s;
-}
+}*/
 /*  intro   */
 .hello {
     line-height: 1.2;
@@ -127,7 +127,7 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     height: calc((170/1080)*100vh);
     overflow: hidden;
 }
-.btn-commute {
+/*.btn-commute {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -141,17 +141,17 @@ div::-webkit-scrollbar-thumb, ul::-webkit-scrollbar-thumb {
     color: var(--color-font-high);
     font-size: var(--font-size-24);
     border: none;
-}
-.btn-commute:hover {
+}*/
+/*.btn-commute:hover {
     background: var(--color-main);
     box-shadow: var(--clay-btn);
     color: white;
-}
-.btn-commute:hover.icon-area::after {
+}*/
+/*.btn-commute:hover.icon-area::after {
     transform: scale(1.2);
     right: 2%;
     bottom: 2%;
-}
+}*/
 #work::after {
     background-image: url("../images/Icon3d/watch.png");
 }

@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="/resources/reset.css">
   <link rel="stylesheet" href="/resources/css/commonStyle.css">
   <link rel="stylesheet" href="/resources/css/common.css">
-  <link rel="stylesheet" href="/resources/css/index.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
