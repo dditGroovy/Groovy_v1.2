@@ -1076,3 +1076,6 @@ target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/admin/hrt/employee/vacation.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/card/detail.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/employee/card/request.jsp
 target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/views/sanction/format/card.html
+target/ddit-1.0.0-BUILD-SNAPSHOT/resources/images/Icon3d/Star_perspective_matte_s.png
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/httpclient-4.5.14.jar
+target/ddit-1.0.0-BUILD-SNAPSHOT/WEB-INF/lib/httpcore-4.4.16.jar
