@@ -126,7 +126,6 @@ public class SalaryController {
     @PostMapping("/paystub/saveCheckboxState")
     @ResponseBody
     public void saveCheckboxState(@RequestParam("isChecked") boolean isChecked) {
-        log.info("isChecked : {}", isChecked);
         service.saveCheckboxState(isChecked);
     }
 
