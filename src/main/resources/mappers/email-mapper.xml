@@ -214,6 +214,7 @@
              , EF.EMAIL_FROM_SJ
              , EF.EMAIL_FROM_CN
              , EF.EMAIL_FROM_CN_TYPE
+             , EF.EMAIL_FROM_CN_TYPE
              , EF.EMAIL_FROM_SEND_DATE
              , ERS.EMAIL_DELETE_AT
              , (SELECT EMPL_NM FROM EMPL E WHERE E.EMPL_EMAIL = EF.EMAIL_FROM_ADDR) AS EMAIL_FROM_NM
